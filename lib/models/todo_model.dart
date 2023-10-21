@@ -6,6 +6,7 @@ class ToDo {
   bool isCompleted;
   DateTime time;
   DateTime createdAt;
+  DateTime updatedAt;
 
   ToDo({
     required this.id,
@@ -15,5 +16,6 @@ class ToDo {
     required this.isCompleted,
     required this.time,
     required this.createdAt,
+    required this.updatedAt,
   });
 }

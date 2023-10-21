@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppConstant.colorsPrimary,
         child: const Icon(
           Icons.add_circle_outline_rounded,
+          color: Colors.white,
           size: AppConstant.iconSizeExtraLarge,
         ),
       ),
@@ -136,19 +137,27 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: GestureDetector(
                               onTap: () async {
-                                String? result = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailTodo(todo: item),
-                                    ));
+                                Map<String, dynamic> result =
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailTodo(todo: item),
+                                        ));
 
-                                if (result != null || result != "") {
-                                  setState(() {
-                                    listTodo.removeWhere(
-                                        (element) => element.id == result);
-                                  });
-                                }
+                                setState(() {
+                                  if (result["isDeleted"]) {
+                                    listTodo.removeWhere((element) =>
+                                        element.id == result["todo"].id);
+                                  } else {
+                                    int index = listTodo.indexWhere((element) =>
+                                        element.id == result["todo"].id);
+                                    //check if element found
+                                    if (index != -1) {
+                                      listTodo[index] = result["todo"];
+                                    }
+                                  }
+                                });
                               },
                               child: itemTodoWidget(
                                 title: item.title,
@@ -412,6 +421,7 @@ class _HomePageState extends State<HomePage> {
                   isCompleted: false,
                   time: selectdate,
                   createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
                 );
                 setState(() {
                   listTodo.add(newTodo);

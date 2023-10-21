@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:submission_todo/common/app_constant.dart';
+
+import '../../common/app_constant.dart';
 
 class ButtonWidget extends StatelessWidget {
   final Widget content;
@@ -9,6 +10,7 @@ class ButtonWidget extends StatelessWidget {
   final double width;
   final double height;
   final bool disabled;
+  final bool enableBorder;
   final BorderRadiusGeometry? borderRadius;
   const ButtonWidget(
       {super.key,
@@ -18,6 +20,7 @@ class ButtonWidget extends StatelessWidget {
       this.isLoading = false,
       required this.width,
       this.height = 56,
+      this.enableBorder = true,
       this.borderRadius =
           const BorderRadius.all(Radius.circular(AppConstant.radiusSmall)),
       this.disabled = false});
@@ -35,11 +38,13 @@ class ButtonWidget extends StatelessWidget {
           decoration: BoxDecoration(
               color: disabled ? Colors.grey : bgColor,
               borderRadius: borderRadius,
-              border: Border.all(
-                  width: 1.5,
-                  color: disabled
-                      ? Colors.transparent
-                      : AppConstant.colorsPrimary)),
+              border: enableBorder
+                  ? Border.all(
+                      width: 1.5,
+                      color: disabled
+                          ? Colors.transparent
+                          : AppConstant.colorsPrimary)
+                  : Border.all(width: 0, color: Colors.transparent)),
           child: Center(child: content),
         ),
       ),

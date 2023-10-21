@@ -24,6 +24,8 @@ class AppConstant {
   static const String textDesc = "Deskripsi";
   static const String textTag = "Tag";
   static const String textTime = "Waktu";
+  static const String textEdit = "Ubah";
+  static const String textDelete = "Hapus";
   static const String textActivity = "Berikut Agenda Untuk Anda";
 
   //error
