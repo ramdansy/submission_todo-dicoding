@@ -39,6 +39,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isWeb = MediaQuery.of(context).size.width >= 1024;
+    final isTab = MediaQuery.of(context).size.width >= 600 &&
+        MediaQuery.of(context).size.width < 1024;
+
     return Scaffold(
       backgroundColor: AppConstant.colorsPrimary,
       body: SafeArea(
@@ -51,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                      onPressed: () => showBottomSheetInfo(context),
+                      onPressed: () =>
+                          showBottomSheetInfo(context, isWeb, isTab),
                       icon: const Icon(
                         Icons.info_outline_rounded,
                         size: AppConstant.iconSizeNormal,
@@ -59,7 +64,9 @@ class _LoginPageState extends State<LoginPage> {
                       ))
                 ],
               ),
-              AppConstant.spaceHeightLarge,
+              isWeb
+                  ? AppConstant.spaceHeightLarge
+                  : AppConstant.spaceWidthNormal,
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -79,7 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              AppConstant.spaceHeightExtraLarge,
+              isWeb
+                  ? AppConstant.spaceHeightLarge
+                  : AppConstant.spaceWidthNormal,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -97,16 +106,23 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   Container(
-                    margin: const EdgeInsets.all(AppConstant.paddingNormal),
-                    padding: const EdgeInsets.all(AppConstant.paddingNormal),
-                    width: MediaQuery.of(context).size.width,
+                    margin:
+                        EdgeInsets.all(isWeb ? 0 : AppConstant.paddingNormal),
+                    padding: EdgeInsets.all(isWeb
+                        ? AppConstant.paddingLarge
+                        : AppConstant.paddingNormal),
+                    width: isWeb
+                        ? MediaQuery.of(context).size.width / 3
+                        : isTab
+                            ? MediaQuery.of(context).size.width / 2
+                            : MediaQuery.of(context).size.width,
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(
                             Radius.circular(AppConstant.radiusLarge)),
                         boxShadow: [AppConstant.shadow]),
                     child: registerVisible ? registerState() : loginState(),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -438,31 +454,39 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  showBottomSheetInfo(BuildContext context) {
-    showModalBottomSheet(
+  showBottomSheetInfo(BuildContext context, bool isWeb, bool isTab) {
+    showDialog(
       context: context,
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(AppConstant.paddingNormal),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                AppConstant.textInfo,
-                style: AppText.fHeading6.copyWith(fontWeight: FontWeight.bold),
-              ),
-              AppConstant.spaceHeightLarge,
-              Text(
-                "Login untuk submission ini bisa menggunakan:\nusername: admin\npassword:admin",
-                style: AppText.fBodyLarge,
-              ),
-              AppConstant.spaceHeightLarge,
-              Text(
-                "Untuk Register, akun hanya bisa digunakan untuk sementara, jika aplikasi ditutup atau akun dilogout maka akun akan hilang dan harus membuat ulang akun",
-                style: AppText.fBodyLarge,
-              ),
-            ],
+        return AlertDialog(
+          scrollable: true,
+          content: SizedBox(
+            width: isWeb
+                ? MediaQuery.of(context).size.width / 3
+                : isTab
+                    ? MediaQuery.of(context).size.width / 2
+                    : MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  AppConstant.textInfo,
+                  style:
+                      AppText.fHeading6.copyWith(fontWeight: FontWeight.bold),
+                ),
+                AppConstant.spaceHeightNormal,
+                Text(
+                  "Login untuk submission ini bisa menggunakan:\nusername: admin\npassword:admin",
+                  style: AppText.fBodyLarge,
+                ),
+                AppConstant.spaceHeightNormal,
+                Text(
+                  "Untuk Register, akun hanya bisa digunakan untuk sementara, jika aplikasi ditutup atau akun dilogout maka akun akan hilang dan harus membuat ulang akun",
+                  style: AppText.fBodyLarge,
+                ),
+              ],
+            ),
           ),
         );
       },
